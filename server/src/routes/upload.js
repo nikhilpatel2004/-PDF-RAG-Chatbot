@@ -15,13 +15,21 @@ router.post('/', upload.single('file'), async (req, res, next) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
     const docId = uuid();
+    logger.info(`Starting PDF processing for doc ${docId}`);
+    
     const documents = await parseAndChunkPdf(req.file.buffer);
+    logger.info(`Parsed ${documents.length} chunks`);
+    
     const vectors = await embedTexts(documents);
+    logger.info(`Generated ${vectors.length} embeddings`);
+    
     const { count } = await upsertDocuments({ docId, documents, vectors });
     logger.info(`Stored ${count} chunks for doc ${docId}`);
+    
     res.json({ docId, chunks: count });
   } catch (err) {
-    next(err);
+    logger.error(`Upload error: ${err.message}`);
+    res.status(500).json({ error: err.message || 'Upload failed' });
   }
 });
 
