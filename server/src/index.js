@@ -16,7 +16,9 @@ app.use(cors({
     'http://localhost:5173', 
     'http://localhost:5174', 
     'http://localhost:5175',
-    'https://rag-pdf-based-bot.netlify.app'
+    'https://rag-pdf-based-bot.netlify.app',
+    /\.netlify\.app$/,
+    /\.onrender\.com$/
   ],
   credentials: true
 }));
@@ -33,7 +35,12 @@ app.get('/health', (_req, res) => {
 
 app.use((err, _req, res, _next) => {
   logger.error(err.message, { stack: err.stack });
-  res.status(500).json({ error: 'Internal Server Error' });
+  // Send actual error in development/debugging
+  res.status(500).json({ 
+    error: 'Internal Server Error',
+    message: err.message,
+    details: process.env.NODE_ENV !== 'production' ? err.stack : undefined
+  });
 });
 
 app.listen(port, () => {

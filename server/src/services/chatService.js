@@ -17,8 +17,13 @@ const LANG_PROMPTS = {
 };
 
 export async function answerQuestion({ namespace, question, language = 'en' }) {
+  console.log(`[Chat] Processing question for namespace: ${namespace}`);
+  
   const queryVector = await embedQuery(question);
+  console.log(`[Chat] Got embedding, querying Pinecone...`);
+  
   const matches = await queryPinecone({ namespace, embedding: queryVector, topK: 3 });
+  console.log(`[Chat] Found ${matches.length} matches`);
 
   const context = matches
     .map((m, idx) => `Chunk ${idx + 1} (score ${m.score?.toFixed(3)}): ${m.metadata?.text || ''}`)
