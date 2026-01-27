@@ -47,7 +47,7 @@ Format your answer using markdown:
 - Use headers (##) if needed for organization`;
 
   const completion = await openrouter.chat.completions.create({
-    model: 'mistralai/mistral-7b-instruct:free',
+    model: 'gpt-4o-mini',
     messages: [
       { role: 'system', content: 'You are a retrieval-augmented assistant. Prefer the provided context. Format responses in markdown.' },
       { role: 'user', content: prompt }
@@ -86,7 +86,7 @@ Provide a well-structured summary that includes:
 4. **Conclusion**: Brief takeaway`;
 
   const completion = await openrouter.chat.completions.create({
-    model: 'mistralai/mistral-7b-instruct:free',
+    model: 'openai/gpt-3.5-turbo',
     messages: [
       { role: 'system', content: 'You are a document summarization expert. Create clear, structured summaries.' },
       { role: 'user', content: prompt }
@@ -130,7 +130,7 @@ IMPORTANT: Return ONLY a valid JSON array with this exact format, no other text:
 Generate ${numQuestions} diverse questions covering different parts of the document.`;
 
   const completion = await openrouter.chat.completions.create({
-    model: 'mistralai/mistral-7b-instruct:free',
+    model: 'openai/gpt-3.5-turbo',
     messages: [
       { role: 'system', content: 'You are a quiz generator. Return ONLY valid JSON arrays, no markdown, no extra text.' },
       { role: 'user', content: prompt }
